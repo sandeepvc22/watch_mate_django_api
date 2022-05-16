@@ -1,10 +1,18 @@
+from wsgiref.validate import validator
 from rest_framework import serializers
 
 from watchlist_app.models import Movie
 
+# Custom validator
+def check_name_lenth(value):
+  if len(value) < 2:
+    raise serializers.ValidationError("Name is too short.")
+  else:
+    return value
+
 class MovieSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
-  name = serializers.CharField()
+  name = serializers.CharField(validators=[check_name_lenth])
   description = serializers.CharField()
   active = serializers.BooleanField()
 
@@ -19,3 +27,18 @@ class MovieSerializer(serializers.Serializer):
     instance.save()
 
     return instance
+  
+  # Object level validation
+  def validate(self, data):
+    if data['name'] == data['description']:
+      raise serializers.ValidationError("Title and Description should be different.")
+    
+    else:
+      return data
+  
+  # # Field level validation
+  # def validate_name(self, value):
+  #   if len(value) < 2:
+  #     raise serializers.ValidationError("Name is too short.")
+  #   else:
+  #     return value
