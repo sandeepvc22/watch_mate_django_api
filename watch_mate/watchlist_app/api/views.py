@@ -29,13 +29,35 @@ def movie_list(request):
       return Response(serializer.errors)
 
 
-@api_view()
+@api_view(['GET', 'PUT', 'DELETE'])
 def movie_detail(request, pk):
-  movie = Movie.objects.get(pk=pk)
+  
+  # Get movies list
+  if request.method == 'GET':
+    movie = Movie.objects.get(pk=pk)
+    serializer = MovieSerializer(movie)
+    return Response(serializer.data)
+  
+  # Update a movie by id
+  if request.method == 'PUT':
+    movie = Movie.objects.get(pk=pk)
+    serializer = MovieSerializer(movie, data=request.data)
 
-  serializer = MovieSerializer(movie)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data)
 
-  return Response(serializer.data)
+    else:
+      return Response(serializer.data)
+  
+  # Delete a movie by id
+  if request.method == 'DELETE':
+     movie = Movie.objects.get(pk=pk)
+     movie.delete()
+
+     return Response({ "message": "movie delete having id {pk}." })
+
+
 
 
 
