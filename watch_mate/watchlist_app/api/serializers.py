@@ -1,16 +1,19 @@
-from wsgiref.validate import validator
 from rest_framework import serializers
 
-from watchlist_app.models import Movie
+from watchlist_app.models import WatchList, StreamPlatform
+
+class StreamPlarformSerializer(serializers.ModelSerializer):
+  
+  class Meta:
+    model = StreamPlatform
+    fields = "__all__"
+
 
 # Model Serializer
-class MovieSerializer(serializers.ModelSerializer):
-
-  # custom field name
-  len_name = serializers.SerializerMethodField()
+class WatchListSerializer(serializers.ModelSerializer):
 
   class Meta:
-    model = Movie
+    model = WatchList
 
     fields = "__all__"
     
@@ -18,27 +21,6 @@ class MovieSerializer(serializers.ModelSerializer):
 
     # exclude fields
     #exclude = ['active', 'id']
-  
-  # Object level validation
-  def validate(self, data):
-    if data['name'] == data['description']:
-      raise serializers.ValidationError("Title and Description should be different.")
-    
-    else:
-      return data
-  
-  # Field level validation
-  def validate_name(self, value):
-    if len(value) < 2:
-      raise serializers.ValidationError("Name is too short.")
-    else:
-      return value
-  
-  def get_len_name(self, object):
-    length = len(object.name)
-
-    return length
-
 
 
 # Custom validator
