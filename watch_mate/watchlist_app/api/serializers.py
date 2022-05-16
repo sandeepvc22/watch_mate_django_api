@@ -5,6 +5,10 @@ from watchlist_app.models import Movie
 
 # Model Serializer
 class MovieSerializer(serializers.ModelSerializer):
+
+  # custom field name
+  len_name = serializers.SerializerMethodField()
+
   class Meta:
     model = Movie
 
@@ -29,6 +33,12 @@ class MovieSerializer(serializers.ModelSerializer):
       raise serializers.ValidationError("Name is too short.")
     else:
       return value
+  
+  def get_len_name(self, object):
+    length = len(object.name)
+
+    return length
+
 
 
 # Custom validator
