@@ -9,11 +9,31 @@ from rest_framework import generics
 
 from rest_framework.views import APIView
 
-
-class ReviewListAV(generics.ListCreateAPIView):
-  queryset = Reviews.objects.all()
+# Create new movie review
+class ReviewCreateAV(generics.CreateAPIView):
+  # queryset = Reviews.objects.all()
   serializer_class = ReviewSerializer
 
+  def perform_create(self, serializer):
+    pk = self.kwargs.get('pk')
+
+    watchlist = WatchList.objects.get(pk=pk)
+
+    return serializer.save(watchlist=watchlist)
+
+    # return super().perform_create(serializer)
+
+
+
+class ReviewListAV(generics.ListAPIView):
+  # queryset = Reviews.objects.all()
+  serializer_class = ReviewSerializer
+
+  # get reviews of a particular movies
+  def get_queryset(self):
+    pk = self.kwargs['pk']
+    
+    return Reviews.objects.filter(watchlist=pk)
 
 class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
   queryset = Reviews.objects.all()
