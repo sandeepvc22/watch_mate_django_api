@@ -10,22 +10,31 @@ from rest_framework import generics
 from rest_framework.views import APIView
 
 
-class ReviewDetailAV(mixins.RetrieveModelMixin, generics.GenericAPIView):
+class ReviewListAV(generics.ListCreateAPIView):
   queryset = Reviews.objects.all()
   serializer_class = ReviewSerializer
 
-  def get(self, request, *args, **kwargs):
-      return self.retrieve(request, *args, **kwargs)
 
-class ReviewListAV(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
   queryset = Reviews.objects.all()
   serializer_class = ReviewSerializer
 
-  def get(self, request, *args, **kwargs):
-    return self.list(request, *args, **kwargs)
+# class ReviewDetailAV(mixins.RetrieveModelMixin, generics.GenericAPIView):
+#   queryset = Reviews.objects.all()
+#   serializer_class = ReviewSerializer
+
+#   def get(self, request, *args, **kwargs):
+#       return self.retrieve(request, *args, **kwargs)
+
+# class ReviewListAV(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+#   queryset = Reviews.objects.all()
+#   serializer_class = ReviewSerializer
+
+#   def get(self, request, *args, **kwargs):
+#     return self.list(request, *args, **kwargs)
   
-  def post(self, request, *args, **kwargs):
-    return self.create(request, *args, **kwargs)
+#   def post(self, request, *args, **kwargs):
+#     return self.create(request, *args, **kwargs)
 
 
 class StreamPlatformAV(APIView):
