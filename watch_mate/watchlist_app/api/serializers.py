@@ -1,10 +1,21 @@
 from turtle import title
 from rest_framework import serializers
 
-from watchlist_app.models import WatchList, StreamPlatform
+from watchlist_app.models import WatchList, StreamPlatform, Reviews
 
 # Model Serializer
+
+class ReviewSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Reviews
+    fields = "__all__"
+
+
+
+
 class WatchListSerializer(serializers.ModelSerializer):
+  
+  reviews = ReviewSerializer(many=True, read_only=True)
 
   class Meta:
     model = WatchList
@@ -18,9 +29,9 @@ class WatchListSerializer(serializers.ModelSerializer):
 
 
 class StreamPlatformSerializer(serializers.ModelSerializer):
-  # watchlist =  WatchListSerializer(many=True, read_only=False)
+  watchlist =  WatchListSerializer(many=True, read_only=False)
   # watchlist = serializers.StringRelatedField(many=True)
-  watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+  # watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
   
   class Meta:
     model = StreamPlatform
