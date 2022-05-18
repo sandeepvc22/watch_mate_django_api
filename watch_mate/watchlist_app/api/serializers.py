@@ -2,13 +2,6 @@ from rest_framework import serializers
 
 from watchlist_app.models import WatchList, StreamPlatform
 
-class StreamPlatformSerializer(serializers.ModelSerializer):
-  
-  class Meta:
-    model = StreamPlatform
-    fields = "__all__"
-
-
 # Model Serializer
 class WatchListSerializer(serializers.ModelSerializer):
 
@@ -21,6 +14,14 @@ class WatchListSerializer(serializers.ModelSerializer):
 
     # exclude fields
     #exclude = ['active', 'id']
+
+
+class StreamPlatformSerializer(serializers.ModelSerializer):
+  watchlist =  WatchListSerializer(many=True, read_only=False)
+  
+  class Meta:
+    model = StreamPlatform
+    fields = "__all__"
 
 
 # Custom validator
